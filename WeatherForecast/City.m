@@ -13,11 +13,11 @@
 #pragma mark 初始化一个城市
 - (id)initWithCityName:(NSString *)newCityName cityID:(NSString *)newCityID weatherCode:(NSString *)newWeatherCode
 {
-    City *city = [[City alloc]init];
-    city.cityName = newCityName;
-    city.cityID = newCityID;
+    City *city       = [[City alloc]init];
+    city.cityName    = newCityName;
+    city.cityID      = newCityID;
     city.weatherCode = newWeatherCode;
-    city.cityLetter = [[NSMutableString alloc]init];;
+    city.cityLetter  = [[NSMutableString alloc]init];;
     return city;
 }
 
