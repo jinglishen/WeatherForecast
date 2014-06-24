@@ -121,6 +121,8 @@
 		798E0F46195A062800AE9158 /* thunderstorm@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 798E0EFE195A062800AE9158 /* thunderstorm@2x.png */; };
 		798E0F47195A062800AE9158 /* wind.png in Resources */ = {isa = PBXBuildFile; fileRef = 798E0EFF195A062800AE9158 /* wind.png */; };
 		798E0F48195A062800AE9158 /* wind@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 798E0F00195A062800AE9158 /* wind@2x.png */; };
+		798E0F4B195A09B800AE9158 /* BTRWeatherPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 798E0F4A195A09B800AE9158 /* BTRWeatherPage.m */; };
+		798E0F4F195A185600AE9158 /* WeatherAnalysis.m in Sources */ = {isa = PBXBuildFile; fileRef = 798E0F4E195A185600AE9158 /* WeatherAnalysis.m */; };
 		79AAB26019552A76008AB607 /* clear.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 79AAB25819552A76008AB607 /* clear.mp4 */; };
 		79AAB26119552A76008AB607 /* n_partlycloudy.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 79AAB25919552A76008AB607 /* n_partlycloudy.mp4 */; };
 		79AAB26219552A76008AB607 /* n_rain.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 79AAB25A19552A76008AB607 /* n_rain.mp4 */; };
@@ -291,6 +293,10 @@
 		798E0EFE195A062800AE9158 /* thunderstorm@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "thunderstorm@2x.png"; sourceTree = "<group>"; };
 		798E0EFF195A062800AE9158 /* wind.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wind.png; sourceTree = "<group>"; };
 		798E0F00195A062800AE9158 /* wind@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "wind@2x.png"; sourceTree = "<group>"; };
+		798E0F49195A09B800AE9158 /* BTRWeatherPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BTRWeatherPage.h; sourceTree = "<group>"; };
+		798E0F4A195A09B800AE9158 /* BTRWeatherPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BTRWeatherPage.m; sourceTree = "<group>"; };
+		798E0F4D195A185600AE9158 /* WeatherAnalysis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeatherAnalysis.h; sourceTree = "<group>"; };
+		798E0F4E195A185600AE9158 /* WeatherAnalysis.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeatherAnalysis.m; sourceTree = "<group>"; };
 		79AAB253195527A0008AB607 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		79AAB25619552A41008AB607 /* WeatherForecast-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "WeatherForecast-Info.plist"; sourceTree = "<group>"; };
 		79AAB25819552A76008AB607 /* clear.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = clear.mp4; sourceTree = "<group>"; };
@@ -478,6 +484,8 @@
 			children = (
 				79AAB26919552B7D008AB607 /* BTRMainViewController.h */,
 				79AAB26A19552B7D008AB607 /* BTRMainViewController.m */,
+				798E0F49195A09B800AE9158 /* BTRWeatherPage.h */,
+				798E0F4A195A09B800AE9158 /* BTRWeatherPage.m */,
 			);
 			name = ViewController;
 			sourceTree = "<group>";
@@ -488,6 +496,7 @@
 				7926899019595FD4008C3D1A /* ASIHttp */,
 				792688E61959583F008C3D1A /* SBJson */,
 				792D784D1957CF7B00CDB570 /* CItyXML */,
+				798E0F4C195A17F100AE9158 /* WeatherAnalysis */,
 			);
 			name = Untility;
 			sourceTree = "<group>";
@@ -612,6 +621,15 @@
 				792688E3195929F0008C3D1A /* WeatherCommand.m */,
 			);
 			name = Command;
+			sourceTree = "<group>";
+		};
+		798E0F4C195A17F100AE9158 /* WeatherAnalysis */ = {
+			isa = PBXGroup;
+			children = (
+				798E0F4D195A185600AE9158 /* WeatherAnalysis.h */,
+				798E0F4E195A185600AE9158 /* WeatherAnalysis.m */,
+			);
+			name = WeatherAnalysis;
 			sourceTree = "<group>";
 		};
 		79AAB26819552A7B008AB607 /* Video */ = {
@@ -812,6 +830,8 @@
 				792689A619595FD4008C3D1A /* ASIFormDataRequest.m in Sources */,
 				792689071959583F008C3D1A /* SBJsonStreamWriterAccumulator.m in Sources */,
 				796147A71953C37100E9611E /* main.m in Sources */,
+				798E0F4F195A185600AE9158 /* WeatherAnalysis.m in Sources */,
+				798E0F4B195A09B800AE9158 /* BTRWeatherPage.m in Sources */,
 				797BE7E219590EC800C8BCF1 /* Weather.m in Sources */,
 				792689031959583F008C3D1A /* SBJsonStreamParserAccumulator.m in Sources */,
 				79AAB26B19552B7D008AB607 /* BTRMainViewController.m in Sources */,

@@ -1,131 +1,72 @@
 //
-//  BTRMainViewController.m
+//  BTRWeatherPage.m
 //  WeatherForecast
 //
-//  Created by geek-group on 14-6-21.
+//  Created by geek-group on 14-6-25.
 //  Copyright (c) 2014年 Benster. All rights reserved.
 //
 
-#import "BTRMainViewController.h"
-#import "CityXML.h"
-#import "City.h"
-#import "WeatherCommand.h"
 #import "BTRWeatherPage.h"
+#import "City.h"
 
-@interface BTRMainViewController ()
+@interface BTRWeatherPage ()
 
 @end
 
-@implementation BTRMainViewController
-@synthesize cities, cityXML, tempCities, weatherInfoARR, showCities;
-@synthesize weatherComm;
-@synthesize movieController;
+@implementation BTRWeatherPage
 @synthesize weatherImg, lbPlace, lbTemp, lbWeatherInfo, lbWind, lbWindSpeed;
 @synthesize lbFutureWeatherFirst, firstImgView, lblFutureWeatherTempFirst, lbFutureWeatherSecond, secondImgView, lblFutureWeatherTempSecond, lbFutureWeatherThird, thirdImgView, lblFutureWeatherTempThird, lbFutureWeatherFourth, fourthImgView, lblFutureWeatherTempFourth;
 
-- (void)loadView
+- (id)initWithFrame:(CGRect)frame
 {
-    //实例化一个子线程初始化话全局对象并获取全国城市信息：
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        [self loadCityData];
-    });
-    [super loadView];
+    self=[self initWithFrame:frame];
+    if (self) {
+        //加载当前天气信息到界面
+//        [self initWeather:self];
+//        [self initFutureWeather:self];
+    }
+    return self;
 }
 
-- (void)viewDidLoad
+- (id)initWithFrame:(CGRect)frame withCity:(City *)city
 {
-    [super viewDidLoad];
-    //加载当前天气视频到主界面
-    [self initVideo];
-    
-    //从网络获取天气信息和当前城市weatherID
-    [self loadWeatherInfo];
-    
-//    BTRWeatherPage *tmpView=[[BTRWeatherPage alloc] initWithFrame:CGRectMake(0, 22, 320, 458)];
-//    [self.view addSubview:tmpView];
-    [self initWeather];
-    [self initFutureWeather];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-}
-
-#pragma mark 初始化话全局对象并获取全国城市信息
-- (void)loadCityData
-{
-    //初始化天气控制对象
-    weatherComm    = [[WeatherCommand alloc]init];
-    //初始化需要显示的城市weatherID数组
-    weatherInfoARR = [NSMutableArray array];
-    //初始化需要显示的城市的天气详情数组
-    showCities     = [[NSMutableArray alloc]initWithObjects:@"101250101", @"101010100", @"101020100", nil];
-    //初始化全国的城市XML
-    cityXML        = [CityXML sharedInstaced];
-    //初始化查找出来的城市数组
-    tempCities     = [NSMutableArray array];
-    cities         = cityXML.loadXML;
-}
-
-- (void)loadWeatherInfo
-{
-    //创建一个线程加载当前城市weatherID和天气详情
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        //获取到当前城市天气ID
-        [showCities replaceObjectAtIndex:0 withObject:[weatherComm autoGetCityWeatherID]];
-        //获取到天气当前天气详情
-        //[weatherComm getWeatherInfo:showCities[0]];
-        //[weatherInfoARR insertObject:[weatherComm getWeatherInfo:showCities[0]] atIndex:0];
-    });
-}
-
-#pragma mark 初始化主界面
-#pragma mark -加载背景视频
-- (void)initVideo
-{
-    NSString *weather = @"clear";
-    //视频路径
-    NSURL *vedioUrl   = [[NSBundle mainBundle] URLForResource:weather withExtension:@"mp4"];
-    movieController   = [[MPMoviePlayerController alloc] initWithContentURL:vedioUrl];
-    //隐藏视频控制栏
-    [movieController setControlStyle:MPMovieControlModeDefault];
-    //设置播放模式（循环播放）
-    [movieController setRepeatMode:MPMovieRepeatModeOne];
-    [movieController setScalingMode:MPMovieScalingModeAspectFill];
-    [movieController.view setFrame:CGRectMake(0, 22, self.view.bounds.size.width, self.view.bounds.size.height)];
-    [self.view insertSubview:movieController.view atIndex:0];
-    [movieController performSelectorInBackground:@selector(play) withObject:nil];
+    self=[self initWithFrame:frame];
+    if(self)
+    {
+        //self.currentCity=city;
+        //NSString *weatherUrl=[[WeatherDAL sharedInstaced] urlWeatherByCityID:currentCity.cityID];
+        //[[DownloadHelper sharedInstance] startRequest:weatherUrl delegate:self tag:1 userInfo:nil];
+    }
+    return self;
 }
 
 #pragma mark 初始化天气信息
 #pragma mark -初始化当前天气信息
-- (void)initWeather
+- (void)initWeather:(id)obj
 {
     //正中间的天气图像
     weatherImg=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"clear.png"]];
-    //[weatherImg setFrame:CGRectMake(70, 80, 180, 180)];
-    [weatherImg setFrame:CGRectMake(30, 130, 180, 180)];
-    [self.view addSubview:weatherImg];
+    [weatherImg setFrame:CGRectMake(70, 80, 180, 180)];
+    [obj addSubview:weatherImg];
     
     //地点标签
     lbPlace=[[UILabel alloc] init];
     [lbPlace setBackgroundColor:[UIColor clearColor]];
     [lbPlace setTextColor:[UIColor whiteColor]];
     [lbPlace setFont:[UIFont fontWithName:@"Helvetica" size:22]];
-    [lbPlace setFrame:CGRectMake(20, 80, 150, 22)];
+    [lbPlace setFrame:CGRectMake(20, 225, 150, 22)];
     [lbPlace setText:@"北京"];
-    [self.view addSubview:lbPlace];
+    [obj addSubview:lbPlace];
     
     //温度标签
     lbTemp=[[UILabel alloc] init];
     [lbTemp setBackgroundColor:[UIColor clearColor]];
     [lbTemp setTextColor:[UIColor whiteColor]];
-    [lbTemp setFont:[UIFont fontWithName:@"Helvetica" size:18]];
+    [lbTemp setFont:[UIFont fontWithName:@"Helvetica" size:19]];
     [lbTemp setTextAlignment:NSTextAlignmentCenter];
-    [lbTemp setFrame:CGRectMake(210, 255, 100, 19)];
-    [lbTemp setText:@"30℃~37℃"];
-    [self.view addSubview:lbTemp];
+    [lbTemp setFrame:CGRectMake(200, 220, 100, 19)];
+    [lbTemp setText:@"30℃~84℃"];
+    [obj addSubview:lbTemp];
     
     //添加天气信息标签
     lbWeatherInfo=[[UILabel alloc] init];
@@ -134,7 +75,7 @@
     [lbWeatherInfo setFont:[UIFont fontWithName:@"Helvetica" size:16]];
     [lbWeatherInfo setFrame:CGRectMake(lbPlace.frame.origin.x, lbPlace.frame.origin.y+lbPlace.frame.size.height+10, 100, 16)];
     [lbWeatherInfo setText:@"小雨转中雨"];
-    [self.view addSubview:lbWeatherInfo];
+    [obj addSubview:lbWeatherInfo];
     
     //风类标签
     lbWind=[[UILabel alloc] init];
@@ -142,9 +83,9 @@
     [lbWind setTextColor:[UIColor whiteColor]];
     [lbWind setTextAlignment:NSTextAlignmentCenter];
     [lbWind setFont:[UIFont fontWithName:@"Helvetica" size:13]];
-    [lbWind setFrame:CGRectMake(190, lbTemp.frame.origin.y+lbTemp.frame.size.height+5, 135, 13)];
+    [lbWind setFrame:CGRectMake(160, lbTemp.frame.origin.y+lbTemp.frame.size.height+5, 135, 13)];
     [lbWind setText:@"微风"];
-    [self.view addSubview:lbWind];
+    [obj addSubview:lbWind];
     
     //风类级别标签
     lbWindSpeed=[[UILabel alloc] init];
@@ -152,13 +93,13 @@
     [lbWindSpeed setTextColor:[UIColor whiteColor]];
     [lbWindSpeed setTextAlignment:NSTextAlignmentCenter];
     [lbWindSpeed setFont:[UIFont fontWithName:@"Helvetica" size:13]];
-    [lbWindSpeed setFrame:CGRectMake(190, lbWind.frame.origin.y+lbWind.frame.size.height+5, lbWind.frame.size.width, 13)];
+    [lbWindSpeed setFrame:CGRectMake(160, lbWind.frame.origin.y+lbWind.frame.size.height+5, lbWind.frame.size.width, 13)];
     [lbWindSpeed setText:@"小于3级"];
-    [self.view addSubview:lbWindSpeed];
+    [obj addSubview:lbWindSpeed];
 }
 
 #pragma mark -初始化未来四天天气信息
-- (void)initFutureWeather
+- (void)initFutureWeather:(id)obj
 {
     //图片宽度
     CGFloat imgWidth=45;
@@ -171,14 +112,14 @@
     [lbFutureWeatherFirst setTextColor:[UIColor whiteColor]];
     [lbFutureWeatherFirst setTextAlignment:NSTextAlignmentCenter];
     [lbFutureWeatherFirst setFont:[UIFont fontWithName:@"Helvetica" size:11]];
-    [lbFutureWeatherFirst setFrame:CGRectMake(20, 350, 70, 11)];
-    [lbFutureWeatherFirst setText:@"星期四"];
-    [self.view addSubview:lbFutureWeatherFirst];
+    [lbFutureWeatherFirst setFrame:CGRectMake(20, 290, 70, 11)];
+    [lbFutureWeatherFirst setText:@"星期六"];
+    [obj addSubview:lbFutureWeatherFirst];
     
     //图片
     firstImgView=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"scatteredsnow.png"]];
     [firstImgView setFrame:CGRectMake(lbFutureWeatherFirst.frame.origin.x+15, lbFutureWeatherFirst.frame.origin.y+lbFutureWeatherFirst.frame.size.height+offsetGap, imgWidth, imgHeight)];
-    [self.view addSubview:firstImgView];
+    [obj addSubview:firstImgView];
     
     //温度
     lblFutureWeatherTempFirst = [[UILabel alloc] init];
@@ -188,7 +129,7 @@
     [lblFutureWeatherTempFirst setFont:[UIFont fontWithName:@"Helvetica" size:12]];
     [lblFutureWeatherTempFirst setFrame:CGRectMake(20, firstImgView.frame.origin.y+firstImgView.frame.size.height, 70, 12)];
     [lblFutureWeatherTempFirst setText:@"23℃"];
-    [self.view addSubview:lblFutureWeatherTempFirst];
+    [obj addSubview:lblFutureWeatherTempFirst];
     
     
     //第2个天气信息
@@ -198,13 +139,13 @@
     [lbFutureWeatherSecond setTextAlignment:NSTextAlignmentCenter];
     [lbFutureWeatherSecond setFont:[UIFont fontWithName:@"Helvetica" size:11]];
     [lbFutureWeatherSecond setFrame:CGRectMake(90, lbFutureWeatherFirst.frame.origin.y, lbFutureWeatherFirst.frame.size.width, lbFutureWeatherFirst.frame.size.height)];
-    [lbFutureWeatherSecond setText:@"星期五"];
-    [self.view addSubview:lbFutureWeatherSecond];
+    [lbFutureWeatherSecond setText:@"星期日"];
+    [obj addSubview:lbFutureWeatherSecond];
     
     //图片
     secondImgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rainandsnow.png"]];
     [secondImgView setFrame:CGRectMake(lbFutureWeatherSecond.frame.origin.x+10, lbFutureWeatherSecond.frame.origin.y+lbFutureWeatherSecond.frame.size.height+offsetGap, imgWidth, imgHeight)];
-    [self.view addSubview:secondImgView];
+    [obj addSubview:secondImgView];
     
     //温度
     lblFutureWeatherTempSecond = [[UILabel alloc] init];
@@ -214,7 +155,7 @@
     [lblFutureWeatherTempSecond setFont:[UIFont fontWithName:@"Helvetica" size:12]];
     [lblFutureWeatherTempSecond setFrame:CGRectMake(20+lbFutureWeatherFirst.frame.size.width, secondImgView.frame.origin.y+secondImgView.frame.size.height, 70, 12)];
     [lblFutureWeatherTempSecond setText:@"18℃"];
-    [self.view addSubview:lblFutureWeatherTempSecond];
+    [obj addSubview:lblFutureWeatherTempSecond];
     
     
     //第3个天气信息
@@ -224,13 +165,13 @@
     [lbFutureWeatherThird setTextAlignment:NSTextAlignmentCenter];
     [lbFutureWeatherThird setFont:[UIFont fontWithName:@"Helvetica" size:11]];
     [lbFutureWeatherThird setFrame:CGRectMake(160, lbFutureWeatherFirst.frame.origin.y, lbFutureWeatherFirst.frame.size.width, lbFutureWeatherFirst.frame.size.height)];
-    [lbFutureWeatherThird setText:@"星期六"];
-    [self.view addSubview:lbFutureWeatherThird];
+    [lbFutureWeatherThird setText:@"星期一"];
+    [obj addSubview:lbFutureWeatherThird];
     
     //图片
     thirdImgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"wind.png"]];
     [thirdImgView setFrame:CGRectMake(lbFutureWeatherThird.frame.origin.x+10, lbFutureWeatherThird.frame.origin.y+lbFutureWeatherThird.frame.size.height+offsetGap, imgWidth, imgHeight)];
-    [self.view addSubview:thirdImgView];
+    [obj addSubview:thirdImgView];
     
     //温度
     lblFutureWeatherTempThird = [[UILabel alloc] init];
@@ -240,7 +181,7 @@
     [lblFutureWeatherTempThird setFont:[UIFont fontWithName:@"Helvetica" size:12]];
     [lblFutureWeatherTempThird setFrame:CGRectMake(20+lblFutureWeatherTempFirst.frame.size.width+lblFutureWeatherTempSecond.frame.size.width, secondImgView.frame.origin.y+secondImgView.frame.size.height, 70, 12)];
     [lblFutureWeatherTempThird setText:@"25℃"];
-    [self.view addSubview:lblFutureWeatherTempThird];
+    [obj addSubview:lblFutureWeatherTempThird];
     
     
     //第4个天气信息
@@ -250,13 +191,13 @@
     [lbFutureWeatherFourth setTextAlignment:NSTextAlignmentCenter];
     [lbFutureWeatherFourth setFont:[UIFont fontWithName:@"Helvetica" size:11]];
     [lbFutureWeatherFourth setFrame:CGRectMake(230, lbFutureWeatherFirst.frame.origin.y, lbFutureWeatherFirst.frame.size.width, lbFutureWeatherFirst.frame.size.height)];
-    [lbFutureWeatherFourth setText:@"星期日"];
-    [self.view addSubview:lbFutureWeatherFourth];
+    [lbFutureWeatherFourth setText:@"星期二"];
+    [obj addSubview:lbFutureWeatherFourth];
     
     //图片
     fourthImgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"storm.png"]];
     [fourthImgView setFrame:CGRectMake(lbFutureWeatherFourth.frame.origin.x+10, lbFutureWeatherFourth.frame.origin.y+lbFutureWeatherFourth.frame.size.height+offsetGap,imgWidth, imgHeight)];
-    [self.view addSubview:fourthImgView];
+    [obj addSubview:fourthImgView];
     
     //温度
     lblFutureWeatherTempFourth = [[UILabel alloc] init];
@@ -266,50 +207,7 @@
     [lblFutureWeatherTempFourth setFont:[UIFont fontWithName:@"Helvetica" size:12]];
     [lblFutureWeatherTempFourth setFrame:CGRectMake(20+lblFutureWeatherTempFirst.frame.size.width+lblFutureWeatherTempSecond.frame.size.width+lblFutureWeatherTempThird.frame.size.width, secondImgView.frame.origin.y+secondImgView.frame.size.height, 70, 12)];
     [lblFutureWeatherTempFourth setText:@"25℃"];
-    [self.view addSubview:lblFutureWeatherTempFourth];
+    [obj addSubview:lblFutureWeatherTempFourth];
 }
-
-- (IBAction)seachCityWID:(id)sender {
-    //启动一个线程去搜索城市
-//    [NSThread detachNewThreadSelector:@selector(seachCity) toTarget:self withObject:nil];
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        //[self seachCity];
-    });
-}
-
-- (void)seachCity
-{
-//    for (City *item in cities) {
-//        NSLog(@"cityLetter = %@", );
-//    }
-    NSLog(@"========");
-    cities = cityXML.getCities;
-    [tempCities removeAllObjects];
-    //查找热门城市
-    for (City * item in cities[0]) {
-        NSRange chinese  = [item.cityName rangeOfString:@"a" options:NSCaseInsensitiveSearch];
-        NSRange  letters = [item.cityLetter rangeOfString:@"gz" options:NSCaseInsensitiveSearch];
-        if (chinese.location != NSNotFound) {
-            [tempCities addObject:item];
-        }else if (letters.location != NSNotFound){
-            [tempCities addObject:item];
-        }
-    }
-    //查找普通城市
-    for (City * item in cities[1]) {
-        NSRange chinese  = [item.cityName rangeOfString:@"a" options:NSCaseInsensitiveSearch];
-        NSRange  letters = [item.cityLetter rangeOfString:@"gz" options:NSCaseInsensitiveSearch];
-        if (chinese.location != NSNotFound) {
-            [tempCities addObject:item];
-        }else if (letters.location != NSNotFound){
-            [tempCities addObject:item];
-        }
-    }
-    NSLog(@"========tempCitiesCount = %i", tempCities.count);
-    for (int i = 0; i < tempCities.count; i ++) {
-        NSLog(@"%@", ((City *)tempCities[i]).cityName);
-    }
-}
-
 
 @end

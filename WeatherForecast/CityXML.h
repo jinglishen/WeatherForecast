@@ -15,6 +15,13 @@
 @property (nonatomic) NSMutableArray *nomalCity;//普通城市
 
 /**
+ *  单例模式
+ *
+ *  @return 解析全国城市XML对象
+ */
++(CityXML *)sharedInstaced;
+
+/**
  *  读取全国城市XML文件
  *
  *  @return 返回全国城市详细信息

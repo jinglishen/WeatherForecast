@@ -87,28 +87,6 @@
     
     NSDictionary *weatherinfo = [dic objectForKey:@"weatherinfo"];
     NSLog(@"weatherinfo  =  %@",weatherinfo);
-    
-//    //当前城市
-//    NSString *city    = [weatherinfo objectForKey:@"city"];
-//    cityLabel.text    = city;
-//    //日期
-//    NSString *date    = [weatherinfo objectForKey:@"date_y"];
-//    dateLabel.text    = date;
-//    //星期
-//    NSString *week    = [weatherinfo objectForKey:@"week"];
-//    weekLabel.text    = week;
-//    //城市天气编码
-//    NSString *cityid  = [weatherinfo objectForKey:@"cityid"];
-//    cityidLabel.text  = cityid;
-//    //当前温度
-//    NSString *temp    = [weatherinfo objectForKey:@"temp1"];
-//    tempLabel.text    = temp;
-//    //当前天气状况
-//    NSString *weather = [weatherinfo objectForKey:@"weather1"];
-//    weatherLabel.text = weather;
-    
-    //更多细节请参考 输出框自己添加！
-    
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request

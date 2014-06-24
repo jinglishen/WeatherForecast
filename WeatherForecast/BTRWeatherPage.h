@@ -1,23 +1,15 @@
 //
-//  BTRMainViewController.h
+//  BTRWeatherPage.h
 //  WeatherForecast
 //
-//  Created by geek-group on 14-6-21.
+//  Created by geek-group on 14-6-25.
 //  Copyright (c) 2014年 Benster. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-#import <MediaPlayer/MediaPlayer.h>
-@class CityXML, Weather, WeatherCommand;
+@class City;
 
-@interface BTRMainViewController : UIViewController
-
-@property (nonatomic) NSMutableArray          *cities;//全国城市详细信息
-@property (nonatomic) NSMutableArray          *tempCities;//搜索出来的城市数组
-@property (nonatomic) CityXML                 *cityXML;//解析全国城市信息XML对象
-@property (nonatomic) NSMutableArray          *showCities;//要显示天气的城市weatherID
-@property (nonatomic) NSMutableArray          *weatherInfoARR;//天气详情数组
-@property (nonatomic) WeatherCommand          *weatherComm;//天气控制对象（获取天气信息）
+@interface BTRWeatherPage : UIView
 
 @property (nonatomic) UIImageView *weatherImg;//天气图标
 @property (nonatomic) UILabel     *lbPlace;//当前城市
@@ -39,8 +31,6 @@
 @property (nonatomic) UIImageView *fourthImgView;//未来天气第四天天气图标
 @property (nonatomic) UILabel     *lblFutureWeatherTempFourth;//未来天气第四天温度
 
-@property (nonatomic) MPMoviePlayerController *movieController;//背景视频
-
-
+- (id)initWithFrame:(CGRect)frame withCity:(City *)city;
 
 @end

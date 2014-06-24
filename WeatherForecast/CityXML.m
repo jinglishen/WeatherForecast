@@ -9,8 +9,19 @@
 #import "CityXML.h"
 #import "City.h"
 
+static CityXML *instance;
+
 @implementation CityXML
 @synthesize cities, hotCity, nomalCity;
+
++(CityXML *)sharedInstaced
+{
+    if(instance==nil)
+    {
+        instance=[[CityXML alloc] init];
+    }
+    return instance;
+}
 
 #pragma mark 加载城市XML
 - (NSMutableArray *)loadXML
