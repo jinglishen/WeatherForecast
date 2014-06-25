@@ -10,10 +10,20 @@
 
 @interface WeatherAnalysis : NSObject
 
-+(WeatherAnalysis *)sharedInstaced;
+/**
+ *  单例模式
+ *
+ *  @return 天气数据解析对象
+ */
++ (WeatherAnalysis *)sharedInstaced;
 
--(NSString *)urlWeatherByCityID:(NSString *)cityID;
-
+/**
+ *  把获取到的JSON数据解析成对象
+ *
+ *  @param paramDict JSON字典
+ *
+ *  @return 解析完的数据
+ */
 -(NSMutableArray *)getWeatherInfo:(NSDictionary *)paramDict;
 
 @end

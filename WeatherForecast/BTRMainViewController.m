@@ -9,6 +9,7 @@
 #import "BTRMainViewController.h"
 #import "CityXML.h"
 #import "City.h"
+#import "Weather.h"
 #import "WeatherCommand.h"
 #import "BTRWeatherPage.h"
 
@@ -36,7 +37,7 @@
 {
     [super viewDidLoad];
     //加载当前天气视频到主界面
-    [self initVideo];
+    [self initVideo:@"rain"];
     
     //从网络获取天气信息和当前城市weatherID
     [self loadWeatherInfo];
@@ -56,7 +57,7 @@
 - (void)loadCityData
 {
     //初始化天气控制对象
-    weatherComm    = [[WeatherCommand alloc]init];
+    weatherComm    = [WeatherCommand sharedInstaced];
     //初始化需要显示的城市weatherID数组
     weatherInfoARR = [NSMutableArray array];
     //初始化需要显示的城市的天气详情数组
@@ -75,6 +76,15 @@
         //获取到当前城市天气ID
         [showCities replaceObjectAtIndex:0 withObject:[weatherComm autoGetCityWeatherID]];
         //获取到天气当前天气详情
+        [weatherComm getWeatherInfo:showCities[0]];
+        //获取天气数据
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            while (0 == weatherComm.weatherInfoList.count){sleep(1);};
+            //[weatherInfoARR replaceObjectAtIndex:0 withObject:weatherComm.weatherInfoList];
+            [weatherInfoARR insertObject:weatherComm.weatherInfoList[0] atIndex:0];
+            NSLog(@"------%@", weatherInfoARR[0]);
+            [self updateMainInThread:weatherInfoARR[0]];
+        });
         //[weatherComm getWeatherInfo:showCities[0]];
         //[weatherInfoARR insertObject:[weatherComm getWeatherInfo:showCities[0]] atIndex:0];
     });
@@ -82,9 +92,9 @@
 
 #pragma mark 初始化主界面
 #pragma mark -加载背景视频
-- (void)initVideo
+- (void)initVideo:(NSString *)videoName
 {
-    NSString *weather = @"clear";
+    NSString *weather = videoName;
     //视频路径
     NSURL *vedioUrl   = [[NSBundle mainBundle] URLForResource:weather withExtension:@"mp4"];
     movieController   = [[MPMoviePlayerController alloc] initWithContentURL:vedioUrl];
@@ -112,7 +122,8 @@
     lbPlace=[[UILabel alloc] init];
     [lbPlace setBackgroundColor:[UIColor clearColor]];
     [lbPlace setTextColor:[UIColor whiteColor]];
-    [lbPlace setFont:[UIFont fontWithName:@"Helvetica" size:22]];
+    //[lbPlace setFont:[UIFont fontWithName:@"Helvetica" size:23]];
+    [lbPlace setFont:[UIFont fontWithName:@"Helvetica-Bold" size:23]];
     [lbPlace setFrame:CGRectMake(20, 80, 150, 22)];
     [lbPlace setText:@"北京"];
     [self.view addSubview:lbPlace];
@@ -121,7 +132,7 @@
     lbTemp=[[UILabel alloc] init];
     [lbTemp setBackgroundColor:[UIColor clearColor]];
     [lbTemp setTextColor:[UIColor whiteColor]];
-    [lbTemp setFont:[UIFont fontWithName:@"Helvetica" size:18]];
+    [lbTemp setFont:[UIFont fontWithName:@"Helvetica" size:19]];
     [lbTemp setTextAlignment:NSTextAlignmentCenter];
     [lbTemp setFrame:CGRectMake(210, 255, 100, 19)];
     [lbTemp setText:@"30℃~37℃"];
@@ -187,7 +198,7 @@
     [lblFutureWeatherTempFirst setTextAlignment:NSTextAlignmentCenter];
     [lblFutureWeatherTempFirst setFont:[UIFont fontWithName:@"Helvetica" size:12]];
     [lblFutureWeatherTempFirst setFrame:CGRectMake(20, firstImgView.frame.origin.y+firstImgView.frame.size.height, 70, 12)];
-    [lblFutureWeatherTempFirst setText:@"23℃"];
+    [lblFutureWeatherTempFirst setText:@"35℃"];
     [self.view addSubview:lblFutureWeatherTempFirst];
     
     
@@ -213,7 +224,7 @@
     [lblFutureWeatherTempSecond setTextAlignment:NSTextAlignmentCenter];
     [lblFutureWeatherTempSecond setFont:[UIFont fontWithName:@"Helvetica" size:12]];
     [lblFutureWeatherTempSecond setFrame:CGRectMake(20+lbFutureWeatherFirst.frame.size.width, secondImgView.frame.origin.y+secondImgView.frame.size.height, 70, 12)];
-    [lblFutureWeatherTempSecond setText:@"18℃"];
+    [lblFutureWeatherTempSecond setText:@"32℃"];
     [self.view addSubview:lblFutureWeatherTempSecond];
     
     
@@ -239,7 +250,7 @@
     [lblFutureWeatherTempThird setTextAlignment:NSTextAlignmentCenter];
     [lblFutureWeatherTempThird setFont:[UIFont fontWithName:@"Helvetica" size:12]];
     [lblFutureWeatherTempThird setFrame:CGRectMake(20+lblFutureWeatherTempFirst.frame.size.width+lblFutureWeatherTempSecond.frame.size.width, secondImgView.frame.origin.y+secondImgView.frame.size.height, 70, 12)];
-    [lblFutureWeatherTempThird setText:@"25℃"];
+    [lblFutureWeatherTempThird setText:@"32℃"];
     [self.view addSubview:lblFutureWeatherTempThird];
     
     
@@ -265,8 +276,42 @@
     [lblFutureWeatherTempFourth setTextAlignment:NSTextAlignmentCenter];
     [lblFutureWeatherTempFourth setFont:[UIFont fontWithName:@"Helvetica" size:12]];
     [lblFutureWeatherTempFourth setFrame:CGRectMake(20+lblFutureWeatherTempFirst.frame.size.width+lblFutureWeatherTempSecond.frame.size.width+lblFutureWeatherTempThird.frame.size.width, secondImgView.frame.origin.y+secondImgView.frame.size.height, 70, 12)];
-    [lblFutureWeatherTempFourth setText:@"25℃"];
+    [lblFutureWeatherTempFourth setText:@"33℃"];
     [self.view addSubview:lblFutureWeatherTempFourth];
+}
+
+#pragma mark -更新当前天气
+-(void)updateMainInThread:(Weather *)city
+{
+//    [movieController.view removeFromSuperview];
+//    [self initVideo:@"clear"];
+    //lblDate.text=city.date_y;
+    weatherImg.image=city.weatherImage;
+    lbPlace.text=city.cityName;
+    lbWeatherInfo.text=city.weather;
+    lbWind.text=city.wind;
+    lbWindSpeed.text=city.windSpeed;
+    lbTemp.text=city.temp;
+    
+    NSLog(@"%@",[NSString stringWithFormat:@"effect_%@.png",city.effectImg]);
+    //[effectBgImgView setImage:[UIImage imageNamed:[NSString stringWithFormat:@"effect_%@.png",city.effectImg]]];
+    
+    //更新未来四天的天气情况
+    firstImgView.image=city.weatherImage;
+    lblFutureWeatherTempFirst.text=city.temp;
+    lbFutureWeatherFirst.text=city.week;
+    
+    secondImgView.image=city.weatherImage;
+    lblFutureWeatherTempSecond.text=city.temp;
+    lbFutureWeatherFourth.text=city.week;
+    
+    thirdImgView.image=city.weatherImage;
+    lblFutureWeatherTempThird.text=city.temp;
+    lbFutureWeatherThird.text=city.week;
+    
+    fourthImgView.image=city.weatherImage;
+    lblFutureWeatherTempFourth.text=city.temp;
+    lbFutureWeatherFourth.text=city.week;
 }
 
 - (IBAction)seachCityWID:(id)sender {
@@ -279,9 +324,6 @@
 
 - (void)seachCity
 {
-//    for (City *item in cities) {
-//        NSLog(@"cityLetter = %@", );
-//    }
     NSLog(@"========");
     cities = cityXML.getCities;
     [tempCities removeAllObjects];

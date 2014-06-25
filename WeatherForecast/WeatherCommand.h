@@ -8,11 +8,14 @@
 
 #import <Foundation/Foundation.h>
 #import "ASIFormDataRequest.h"
-@class Weather;
+@class Weather, WeatherAnalysis;
 
 @interface WeatherCommand : NSObject<ASIHTTPRequestDelegate>
 
 @property (nonatomic)NSMutableArray *weatherInfoList;//天气信息数组
+@property (nonatomic)WeatherAnalysis *weatherAnalysis;//数据解析对象
+
++ (WeatherCommand *)sharedInstaced;
 
 /**
  *  通过IP获取当前所在的的城市WeatherID

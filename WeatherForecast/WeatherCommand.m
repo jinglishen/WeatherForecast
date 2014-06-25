@@ -8,9 +8,21 @@
 
 #import "WeatherCommand.h"
 #import "SBJson.h"
+#import "WeatherAnalysis.h"
 
+static WeatherCommand *instance;
 
 @implementation WeatherCommand
+@synthesize weatherAnalysis, weatherInfoList;
+
++ (WeatherCommand *)sharedInstaced
+{
+    if(instance==nil)
+    {
+        instance=[[WeatherCommand alloc] init];
+    }
+    return instance;
+}
 
 #pragma mark 通过IP地址获取当前所在的城市
 - (NSString *)autoGetCityWeatherID
@@ -47,23 +59,24 @@
 #pragma mark 通过weatherID获取天气详情
 - (void)getWeatherInfo:(NSString *)weatherID
 {
-    //中国天气网解析地址；
-    //NSString *path=@"http://m.weather.com.cn/atad/101230201.html";
-    NSString *path = [[NSString alloc]init];
-    //将城市代码替换到天气解析网址cityNumber部分！
-    path = [path stringByReplacingOccurrencesOfString:@"cityNumber" withString:weatherID];
-    path = [NSString stringWithFormat:@"http://m.weather.com.cn/atad/%@.html", ([weatherID isEqualToString:nil]? @"101250101" : weatherID)];
-    NSLog(@"path:%@",path);
-    
-    ASIFormDataRequest *request = [[ASIFormDataRequest alloc] initWithURL:[NSURL URLWithString:path]];
-    
+    ASIFormDataRequest *request = [[ASIFormDataRequest alloc] initWithURL:[self getWeatherURL:weatherID]];
     request.delegate = self;
     //开始请求链接
     [request startAsynchronous];
-    //return nil;
-//    NSURL *url = [NSURL URLWithString:path];
-//    NSString *jsonString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];
-//    NSLog(@"weatherInfo : %@", jsonString);
+}
+
+/**
+ *  通过WeatherID获取城市天气的网络路劲
+ *
+ *  @param weatherID 天气ID
+ *
+ *  @return 获取天气的网络地址
+ */
+- (NSURL *)getWeatherURL:(NSString *)weatherID
+{
+    NSString *url = [NSString stringWithFormat:@"http://m.weather.com.cn/atad/%@.html", ([weatherID isEqualToString:nil]? @"101250101" : weatherID)];
+    NSLog(@"weatherURL = %@", url);
+    return [NSURL URLWithString:url];
 }
 
 #pragma mark -
@@ -76,6 +89,8 @@
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
+    weatherInfoList = [[NSMutableArray alloc]init];
+    weatherAnalysis = [WeatherAnalysis sharedInstaced];
     NSLog(@"请求结束了");
     //responseString就是response响应的正文内容.(即网页的源代码)
     NSString *str = request.responseString;
@@ -87,6 +102,8 @@
     
     NSDictionary *weatherinfo = [dic objectForKey:@"weatherinfo"];
     NSLog(@"weatherinfo  =  %@",weatherinfo);
+    weatherInfoList = [weatherAnalysis getWeatherInfo:dic];
+    NSLog(@"weatherinfo = %@", weatherInfoList);
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request
